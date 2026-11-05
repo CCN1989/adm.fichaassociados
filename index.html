@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Painel Administrativo Cadastros</title>
+<style>
+:root{--fundo:#FFF3E4;--papel:#FFFBF6;--laranja:#F6A85B;--escuro:#D9792B;--claro:#FFE0BD;--texto:#4A2C12;--suave:#8A6A4D;--borda:#F0CFA6;--erro:#B3261E;--ok:#2E6B2E}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fundo);color:var(--texto);font:15px/1.45 system-ui,sans-serif}
+[hidden]{display:none!important}
+header{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--claro);border-bottom:4px solid var(--laranja);padding:12px 22px}
+header img{height:48px}header h1{margin:0;font:700 1.25rem Georgia,serif;flex:1}
+nav{display:flex;gap:6px;padding:12px 22px 0}
+nav button{background:var(--claro);border:1px solid var(--borda);border-bottom:0;border-radius:10px 10px 0 0;padding:10px 22px;font-weight:600;color:var(--suave)}
+nav button.on{background:var(--papel);color:var(--escuro);box-shadow:0 2px 0 var(--papel)}
+main{background:var(--papel);border:1px solid var(--borda);margin:0 22px 40px;padding:20px;border-radius:0 12px 12px 12px}
+button{font:600 .95rem system-ui,sans-serif;border:0;border-radius:8px;padding:9px 16px;cursor:pointer}
+.p{background:var(--escuro);color:#fff}.p:hover{background:#C26A22}.s{background:var(--claro);border:1px solid var(--laranja);color:var(--texto)}
+button:disabled{opacity:.5;cursor:not-allowed}
+input,select{padding:9px 10px;border:1px solid var(--borda);border-radius:8px;font:inherit;background:#fff;color:var(--texto);max-width:100%}
+input:focus,select:focus,button:focus-visible{outline:3px solid var(--laranja)}
+label{display:block;font-size:.8rem;font-weight:600;color:var(--suave);margin-bottom:3px}
+h2{font:700 1.1rem Georgia,serif;color:var(--escuro);margin:0 0 10px}
+.card{background:#fff;border:1px solid var(--borda);border-radius:10px;padding:16px;margin-top:14px}
+.linha{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+#login{max-width:340px;margin:12vh auto;background:var(--papel);border:1px solid var(--borda);border-top:6px solid var(--laranja);border-radius:12px;padding:26px;text-align:center}
+#login input{width:100%;margin:10px 0}
+.logo-login{height:130px;width:auto;margin-bottom:8px}
+#res{list-style:none;margin:6px 0 0;padding:0;border:1px solid var(--borda);border-radius:8px;background:#fff}
+#res:empty{display:none}
+#res li{padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--claro)}
+#res li:hover{background:var(--claro)}#res li span{color:var(--suave);font-size:.85rem}.vazio{cursor:default!important;color:var(--suave)}
+.meses{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px;margin-top:10px}
+.mes{padding:10px 6px;border:2px solid var(--borda);background:#fff;border-radius:10px;text-align:center;font-weight:600}
+.mes small{display:block;font-weight:400;color:var(--suave)}
+.mes.pago{background:#E3F3DE;border-color:#9BCB92;color:var(--ok)}
+.mes.atraso{border-color:#E8A39D;background:#FDECEA;color:var(--erro)}
+.mes.atual{border-color:var(--laranja)}.mes.futuro{color:var(--suave)}
+.mes.fora{opacity:.35;cursor:not-allowed}.mes.marcado{background:var(--escuro);border-color:var(--escuro);color:#fff}.mes.marcado small{color:#fff}
+.tag{display:inline-block;padding:2px 10px;border-radius:99px;font-size:.8rem;font-weight:700}
+.t-in{background:#E7E1DA;color:var(--suave)}.t-ok{background:#E3F3DE;color:var(--ok)}.t-at{background:#FDECEA;color:var(--erro)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{background:#fff;border:1px solid var(--borda);border-left:5px solid var(--laranja);border-radius:10px;padding:12px 14px}
+.kpi b{display:block;font:700 1.5rem Georgia,serif;color:var(--escuro)}.kpi span{font-size:.8rem;color:var(--suave)}
+.barra{display:flex;align-items:center;gap:8px;margin:4px 0;font-size:.85rem}.barra i{display:block;height:14px;background:var(--laranja);border-radius:4px;min-width:3px}.barra em{width:78px;font-style:normal}
+.cols{display:flex;gap:6px 16px;flex-wrap:wrap}.cols label{display:flex;gap:5px;align-items:center;color:var(--texto);font-weight:500;margin:0;font-size:.88rem}
+#fin-tb tr{cursor:pointer}#fin-tb tr:hover{background:var(--claro)}.t-pe{background:#FFF1DC;color:var(--escuro)}
+#ed-tb tr{cursor:pointer}#ed-tb tr:hover{background:var(--claro)}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.g input,.g select{width:100%}
+.dd{display:grid;grid-template-columns:90px 1fr;gap:6px}
+.edep{border-left:5px solid var(--laranja)}
+.fotoed{display:flex;gap:12px;align-items:center}
+.pv{width:90px;height:120px;flex:none;border:2px dashed var(--laranja);border-radius:6px;background:var(--claro) center/cover no-repeat;display:grid;place-items:center;font-size:.75rem;color:var(--suave);text-align:center}
+.tab{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.88rem}
+th{background:var(--claro);text-align:left;padding:8px 10px;white-space:nowrap}td{padding:7px 10px;border-bottom:1px solid var(--claro)}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--texto);color:#fff;padding:12px 20px;border-radius:10px;z-index:9;max-width:90%;text-align:center}
+#espera{position:fixed;inset:0;background:rgba(74,44,18,.45);display:grid;place-items:center;color:#fff;font-weight:700;z-index:8}
+@media(max-width:600px){main,nav,header{margin-left:0;margin-right:0}main{border-radius:0;padding:14px}}
+</style>
+</head>
+<body>
+<div id="login">
+  <img src="https://raw.githubusercontent.com/CCN1989/Imagens/refs/heads/main/Logo_Oficial%2Blema.png" alt="Logo" class="logo-login" onerror="this.remove()">
+  <h2>Painel Administrativo Cadastros</h2>
+  <input id="usuario" placeholder="Usuário" autocomplete="username">
+  <input id="senha" type="password" placeholder="Senha" autocomplete="current-password">
+  <button class="p" id="entrar" style="width:100%">Entrar</button>
+  <div id="e-login" style="color:var(--erro);margin-top:10px;font-size:.9rem"></div>
+</div>
+
+<div id="app" hidden>
+  <header><img src="https://raw.githubusercontent.com/CCN1989/Imagens/refs/heads/main/Logo_Oficial%2Blema.png" alt="Logo" onerror="this.remove()"><h1>Painel Administrativo | Associados</h1>
+    <span id="quem" style="color:var(--suave)"></span><button class="s" id="atualizar">↻ Atualizar</button><button class="s" id="sair">Sair</button></header>
+  <nav><button class="on" data-aba="fin">Financeiro</button><button data-aba="con">Consulta</button><button data-aba="edi" hidden>Edição</button></nav>
+  <main>
+  <section id="aba-fin">
+    <div id="fin-lista">
+      <div class="card" style="margin-top:0"><div class="linha">
+        <div><label>Nome ou código</label><input id="fl-nome" placeholder="Digite o nome…" autocomplete="off"></div>
+        <div><label>Documento (CPF/RG)</label><input id="fl-doc" placeholder="Só números já basta" autocomplete="off"></div>
+        <div><label>Invernada</label><select id="fl-inv"><option value="">Todas</option><option>Não</option><option>Mirim</option><option>Juvenil</option><option>Adulta</option><option>Veterana</option><option>Xirú</option></select></div>
+        <div><label>Situação</label><select id="fl-sit"><option value="">Todas</option><option>Em dia</option><option>Em atraso</option></select></div>
+        <div><label>Cadastro</label><select id="fl-cad"><option>Ativos</option><option>Inativos</option><option>Todos</option></select></div>
+        <button class="s" id="fl-limpar">Limpar filtros</button>
+      </div></div>
+      <div class="card tab"><table><thead><tr><th>Nome</th><th>Código</th><th>Documento</th><th>Invernada</th><th>Situação</th><th>Mês atual</th><th>Mensalidade</th></tr></thead><tbody id="fin-tb"></tbody></table>
+        <div id="fin-conta" style="color:var(--suave);margin-top:8px;font-size:.85rem"></div></div>
+    </div>
+    <div id="ficha" class="card" hidden>
+      <button class="s" id="voltar" style="margin-bottom:12px">← Voltar à lista</button>
+      <div class="linha" style="justify-content:space-between">
+        <div><h2 id="f-nome" style="margin:0"></h2><div id="f-info" style="color:var(--suave)"></div></div>
+        <div style="text-align:right"><div id="f-valor" style="font:700 1.4rem Georgia,serif;color:var(--escuro)"></div><span id="f-sit"></span><div style="margin-top:6px"><button class="s" id="btn-sit" hidden></button></div></div>
+      </div>
+      <div class="linha" style="margin-top:14px"><div><label>Ano</label><select id="ano"></select></div>
+        <div style="color:var(--suave);font-size:.85rem;padding-bottom:10px">Clique nos meses para marcar o recebimento. Clique num mês pago para estornar.</div></div>
+      <div class="meses" id="meses"></div>
+      <div id="so-leitura" style="margin-top:14px;color:var(--suave)" hidden>Seu usuário tem acesso somente de consulta no Financeiro.</div>
+      <div class="linha" id="acoes-fin" style="margin-top:16px">
+        <div><label>Forma de pagamento</label><select id="forma"><option>Dinheiro</option><option>PIX</option><option>Cartão</option><option>Transferência</option></select></div>
+        <label style="display:flex;gap:6px;align-items:center;color:var(--texto);padding-bottom:10px"><input type="checkbox" id="email" checked> Enviar recibo por e-mail</label>
+        <button class="p" id="pagar" disabled>Registrar pagamento</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="aba-con" hidden>
+    <div class="kpis" id="kpis"></div>
+    <div class="card"><h2>Distribuição por invernada (cadastros ativos)</h2><div id="barras"></div></div>
+    <div class="card"><h2>Filtros</h2>
+      <div class="linha">
+        <div><label>Busca</label><input id="c-q" placeholder="Nome, código, documento…"></div>
+        <div><label>Invernada</label><select id="c-inv"><option value="">Todas</option><option>Não</option><option>Mirim</option><option>Juvenil</option><option>Adulta</option><option>Veterana</option><option>Xirú</option></select></div>
+        <div><label>Situação</label><select id="c-sit"><option value="">Todas</option><option>Em dia</option><option>Em atraso</option></select></div>
+        <div><label>Cadastro</label><select id="c-cad"><option value="">Todos</option><option>Ativo</option><option>Inativo</option></select></div>
+        <div><label>Cidade</label><select id="c-cid"></select></div>
+        <div><label>Listar</label><select id="c-quem"><option value="t">Somente titulares</option><option value="d">Titulares e dependentes</option></select></div>
+      </div>
+      <h2 style="margin-top:16px">Colunas da lista</h2><div class="cols" id="cols"></div>
+      <div class="linha" style="margin-top:14px"><button class="p" id="pdf">Gerar PDF</button><button class="s" id="csv">Baixar planilha (CSV)</button>
+        <span id="c-conta" style="color:var(--suave)"></span></div>
+    </div>
+    <div class="card tab"><table><thead id="th"></thead><tbody id="tb"></tbody></table></div>
+  </section>
+  <section id="aba-edi" hidden>
+    <div id="ed-lista">
+      <div class="card" style="margin-top:0"><div class="linha">
+        <div><label>Nome ou código</label><input id="ed-nome" placeholder="Digite o nome…" autocomplete="off"></div>
+        <div><label>Documento</label><input id="ed-doc" placeholder="CPF ou RG" autocomplete="off"></div>
+        <div><label>Cadastro</label><select id="ed-cad"><option>Todos</option><option>Ativos</option><option>Inativos</option></select></div>
+      </div></div>
+      <div class="card tab"><table><thead><tr><th>Nome</th><th>Código</th><th>Documento</th><th>Invernada</th><th>Cadastro</th></tr></thead><tbody id="ed-tb"></tbody></table>
+        <div id="ed-conta" style="color:var(--suave);margin-top:8px;font-size:.85rem"></div></div>
+    </div>
+    <div id="ed-form" hidden></div>
+  </section>
+  </main>
+</div>
+<div id="espera" hidden>Aguarde…</div><div id="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+/* Cole aqui a MESMA URL do Apps Script (Web App) usada na ficha. */
+const URL_API = "https://script.google.com/macros/s/AKfycbyZNsypBcBgyEoteTLHMaYd_2Wpgo6rDtY_kpW7T6sWJKJoJQ7HTdpXI4Y6Aue4SQnECw/exec";
+
+const $ = s => document.querySelector(s), pad = n => String(n).padStart(2, "0");
+const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const brl = n => Number(n || 0).toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+const norm = t => String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+const NOMES = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+const PODE = () => ["master", "financeiro"].includes(sessionStorage.getItem("perfil"));
+const MASTER = () => sessionStorage.getItem("perfil") === "master";
+let D = null, sel = null, ano = 0, marc = new Set(), busy = false;
+
+function toast(t, ms = 4500){ const e = $("#toast"); e.textContent = t; e.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => e.hidden = true, ms); }
+async function api(acao, extra = {}){
+  if (!URL_API) throw new Error("Configure URL_API no início do script.");
+  const r = await fetch(URL_API, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body: JSON.stringify({acao, token: sessionStorage.getItem("token"), ...extra})});
+  const j = await r.json();
+  if (j.sessao === false){ sessionStorage.clear(); alert(j.erro); location.reload(); }
+  if (!j.ok) throw new Error(j.erro || "Erro"); return j;
+}
+async function carregar(){ D = await api("listar"); ligaDados(); }
+
+/* ---------- lógica financeira ---------- */
+const mesesEntre = (a, b) => { const o = []; let [y, m] = a.split("-").map(Number); const [y2, m2] = b.split("-").map(Number);
+  while (y < y2 || (y === y2 && m <= m2)){ o.push(y + "-" + pad(m)); if (++m > 12){ m = 1; y++; } } return o; };
+const inicioDe = a => (a.cadastro && a.cadastro > D.config.inicio) ? a.cadastro : D.config.inicio;
+const pagosDe = cod => { const m = {}; D.pagamentos.forEach(p => { if (p.codigo === cod) m[p.competencia] = p; }); return m; };
+function atrasos(a){
+  if (a.situacao === "Inativo") return [];
+  const ini = inicioDe(a), pg = pagosDe(a.codigo); if (ini >= D.hoje) return [];
+  const ant = D.hoje.slice(0,4) + "-" + pad(+D.hoje.slice(5) - 1 || 12);
+  const fim = +D.hoje.slice(5) === 1 ? (+D.hoje.slice(0,4) - 1) + "-12" : ant;
+  return mesesEntre(ini, fim).filter(c => !pg[c]);
+}
+const situacao = a => a.situacao === "Inativo" ? "Inativo" : atrasos(a).length ? "Em atraso" : "Em dia";
+
+/* ---------- Financeiro ---------- */
+function linhasFin(){
+  const n = norm($("#fl-nome").value), dtxt = $("#fl-doc").value.trim(), dig = dtxt.replace(/\D/g, "");
+  const inv = $("#fl-inv").value, sit = $("#fl-sit").value, cad = $("#fl-cad").value;
+  return D.associados.filter(a => {
+    if (cad === "Ativos" && a.situacao === "Inativo") return false;
+    if (cad === "Inativos" && a.situacao !== "Inativo") return false;
+    if (n && !norm(a.nome + " " + a.codigo).includes(n)) return false;
+    if (dtxt && (dig ? !a.documento.replace(/\D/g, "").includes(dig) : !norm(a.documento).includes(norm(dtxt)))) return false;
+    if (inv && a.invernada !== inv && !a.deps.some(x => x.invernada === inv)) return false;
+    if (sit && situacao(a) !== sit) return false;
+    return true;
+  }).sort((x, y) => x.nome.localeCompare(y.nome, "pt-BR"));
+}
+function desenhaLista(){
+  const r = linhasFin(), mostra = r.slice(0, 60);
+  $("#fin-tb").innerHTML = mostra.map(a => {
+    const st = situacao(a), n = atrasos(a).length;
+    const tag = st === "Inativo" ? '<span class="tag t-in">Inativo</span>' : st === "Em atraso" ? `<span class="tag t-at">Em atraso (${n})</span>` : '<span class="tag t-ok">Em dia</span>';
+    const mes = st === "Inativo" ? "—" : pagosDe(a.codigo)[D.hoje] ? '<span class="tag t-ok">Pago</span>' : '<span class="tag t-pe">Pendente</span>';
+    return `<tr data-c="${esc(a.codigo)}"><td><b>${esc(a.nome)}</b></td><td>${esc(a.codigo)}</td><td>${esc(a.documento)}</td><td>${esc(a.invernada)}</td><td>${tag}</td><td>${mes}</td><td>${brl(a.valor)}</td></tr>`;
+  }).join("") || '<tr><td colspan="7">Nenhum associado encontrado com esses filtros.</td></tr>';
+  $("#fin-conta").textContent = r.length > 60 ? `Mostrando 60 de ${r.length}. Use os filtros para refinar.` : `${r.length} associado(s). Clique numa linha para abrir.`;
+}
+["fl-nome","fl-doc","fl-inv","fl-sit","fl-cad"].forEach(id => $("#" + id).addEventListener("input", desenhaLista));
+function limpaFiltros(){ ["fl-nome","fl-doc","fl-inv","fl-sit"].forEach(id => $("#" + id).value = ""); $("#fl-cad").value = "Ativos"; }
+$("#fl-limpar").addEventListener("click", () => { limpaFiltros(); desenhaLista(); });
+$("#fin-tb").addEventListener("click", e => {
+  const tr = e.target.closest("tr[data-c]"); if (!tr) return;
+  sel = tr.dataset.c; marc.clear(); ano = +D.hoje.slice(0,4); desenhaFicha(); window.scrollTo({top: 0});
+});
+function voltar(){ sel = null; marc.clear(); $("#ficha").hidden = true; $("#fin-lista").hidden = false; desenhaLista(); }
+function voltarInicio(){ limpaFiltros(); voltar(); window.scrollTo({top: 0, behavior: "smooth"}); }
+$("#voltar").addEventListener("click", voltar);
+$("#btn-sit").addEventListener("click", () => {
+  const a = D.associados.find(x => x.codigo === sel), novo = a.situacao === "Inativo" ? "Ativo" : "Inativo";
+  if (confirm(`Marcar ${a.nome} como ${novo}?`)) acao("situacao", {codigo: sel, situacao: novo}, "Situação atualizada: " + novo + ".");
+});
+$("#ano").addEventListener("change", e => { ano = +e.target.value; desenhaFicha(); });
+
+function desenhaFicha(novo){
+  const a = D.associados.find(x => x.codigo === sel); if (!a){ voltar(); return; }
+  $("#ficha").hidden = false; $("#fin-lista").hidden = true;
+  $("#acoes-fin").hidden = !PODE(); $("#so-leitura").hidden = PODE();
+  const pg = pagosDe(a.codigo), ini = inicioDe(a), at = atrasos(a);
+  $("#f-nome").textContent = a.nome;
+  $("#f-info").textContent = `${a.codigo} · ${a.documento} · ${a.email || "sem e-mail"} · ${a.deps.length} dependente(s)`;
+  $("#f-valor").textContent = brl(a.valor) + " / mês";
+  const inat = a.situacao === "Inativo";
+  $("#f-sit").className = "tag " + (inat ? "t-in" : at.length ? "t-at" : "t-ok");
+  $("#f-sit").textContent = inat ? "Associado inativo (sem cobrança)" : at.length ? `Em atraso: ${at.length} mês(es)` : "Em dia";
+  const bs = $("#btn-sit"); bs.hidden = !MASTER(); bs.textContent = inat ? "Reativar associado" : "Marcar como inativo";
+  const anos = []; for (let y = +ini.slice(0,4); y <= +D.hoje.slice(0,4) + 1; y++) anos.push(y);
+  if (anos.indexOf(ano) < 0) ano = anos[0];
+  $("#ano").innerHTML = anos.map(y => `<option ${y === ano ? "selected" : ""}>${y}</option>`).join("");
+  $("#meses").innerHTML = NOMES.map((n, i) => {
+    const c = ano + "-" + pad(i + 1); let cl, sub;
+    if (pg[c]){ cl = "pago"; sub = "pago " + esc(pg[c].pagoEm.split("-").reverse().join("/")); }
+    else if (c < ini){ cl = "fora"; sub = "—"; }
+    else if (c < D.hoje){ cl = "atraso"; sub = "em atraso"; }
+    else if (c === D.hoje){ cl = "atual"; sub = "mês atual"; } else { cl = "futuro"; sub = "futuro"; }
+    if (marc.has(c)) cl += " marcado";
+    return `<div class="mes ${cl}" data-c="${c}">${n}<small>${sub}</small></div>`;
+  }).join("");
+  const b = $("#pagar"); b.disabled = !marc.size; b.textContent = marc.size ? `Registrar ${marc.size} mês(es) · ${brl(marc.size * a.valor)}` : "Registrar pagamento";
+}
+$("#meses").addEventListener("click", async e => {
+  const m = e.target.closest(".mes"); if (!m || m.classList.contains("fora") || busy || !PODE()) return;
+  const c = m.dataset.c;
+  if (m.classList.contains("pago")){
+    if (!confirm(`Estornar o pagamento de ${c.slice(5)}/${c.slice(0,4)}?`)) return;
+    return acao("estornar", {codigo: sel, competencia: c}, "Pagamento estornado.");
+  }
+  marc.has(c) ? marc.delete(c) : marc.add(c); desenhaFicha();
+});
+$("#pagar").addEventListener("click", async () => {
+  const a = D.associados.find(x => x.codigo === sel);
+  const r = await acao("pagar", {codigo: sel, competencias: [...marc], forma: $("#forma").value, enviarEmail: $("#email").checked}, null);
+  if (r){ toast(`Recibo ${r.recibo} registrado. ${r.aviso || (r.email.startsWith("Enviado") ? "E-mail enviado." : "")}`, 7000); voltarInicio(); }
+});
+async function acao(nome, dados, msg){
+  busy = true; $("#espera").hidden = false;
+  try { const r = await api(nome, dados); marc.clear(); await carregar(); if (msg) toast(msg); return r; }
+  catch (err){ toast("Erro: " + err.message, 7000); return null; }
+  finally { busy = false; $("#espera").hidden = true; }
+}
+
+/* ---------- Consulta ---------- */
+const COLS = [["codigo","Código",1],["tipo","Tipo",0],["nome","Nome",1],["documento","Documento",1],["nascimento","Nascimento",0],["invernada","Invernada",1],
+  ["cidade","Cidade",0],["bairro","Bairro",0],["email","E-mail",0],["whatsapp","WhatsApp",0],["deps","Dependentes",0],["valor","Mensalidade",0],["situacao","Situação",1],["cadastro","Cadastro",0],["atraso","Meses em atraso",0]];
+$("#cols").innerHTML = COLS.map(c => `<label><input type="checkbox" data-k="${c[0]}" ${c[2] ? "checked" : ""}> ${c[1]}</label>`).join("");
+
+function pessoas(){
+  const out = [];
+  D.associados.forEach(a => {
+    const sit = situacao(a), at = atrasos(a).length;
+    const base = {cidade:a.cidade, bairro:a.bairro, email:a.email, whatsapp:a.whatsapp, situacao:sit, atraso:at, cadastro:a.situacao};
+    out.push({...base, codigo:a.codigo, tipo:"Titular", nome:a.nome, documento:a.documento, nascimento:a.nascimento, invernada:a.invernada, deps:a.deps.length, valor:brl(a.valor)});
+    a.deps.forEach(d => out.push({...base, codigo:d.codigo, tipo:d.parentesco, nome:d.nome, documento:d.documento, nascimento:d.nascimento, invernada:d.invernada, deps:"", valor:"", titular:true}));
+  });
+  return out;
+}
+function filtradas(){
+  const q = norm($("#c-q").value), inv = $("#c-inv").value, sit = $("#c-sit").value, cid = $("#c-cid").value, cad = $("#c-cad").value, soT = $("#c-quem").value === "t";
+  return pessoas().filter(p => (!soT || p.tipo === "Titular") && (!inv || p.invernada === inv) && (!sit || p.situacao === sit) &&
+    (!cid || p.cidade === cid) && (!cad || p.cadastro === cad) && (!q || norm(p.nome + " " + p.codigo + " " + p.documento).includes(q)));
+}
+const colsSel = () => COLS.filter(c => $(`#cols [data-k="${c[0]}"]`).checked);
+function desenhaConsulta(){
+  const todas = pessoas(), tit = D.associados, ativos = tit.filter(a => a.situacao !== "Inativo");
+  const dia = ativos.filter(a => situacao(a) === "Em dia").length;
+  const rec = D.pagamentos.filter(p => p.competencia === D.hoje).reduce((s, p) => s + p.valor, 0);
+  $("#kpis").innerHTML = [[ativos.length,"Associados ativos"],[tit.length - ativos.length,"Inativos"],
+    [todas.filter(p => p.tipo !== "Titular" && p.cadastro === "Ativo").length,"Dependentes (ativos)"],[dia,"Em dia"],[ativos.length - dia,"Em atraso"],
+    [brl(ativos.reduce((s, a) => s + a.valor, 0)),"Previsto por mês"],[brl(rec),"Recebido no mês atual"]].map(k => `<div class="kpi"><b>${esc(k[0])}</b><span>${k[1]}</span></div>`).join("");
+  const cont = {}; todas.filter(p => p.cadastro === "Ativo").forEach(p => { const k = p.invernada || "—"; cont[k] = (cont[k] || 0) + 1; });
+  const mx = Math.max(1, ...Object.values(cont));
+  $("#barras").innerHTML = Object.entries(cont).map(([k, v]) => `<div class="barra"><em>${esc(k)}</em><i style="width:${v / mx * 60}%"></i>${v}</div>`).join("") || "Sem dados.";
+  const cs = colsSel(), rows = filtradas();
+  $("#th").innerHTML = "<tr>" + cs.map(c => `<th>${c[1]}</th>`).join("") + "</tr>";
+  $("#tb").innerHTML = rows.map(r => "<tr>" + cs.map(c => `<td>${esc(r[c[0]])}</td>`).join("") + "</tr>").join("") || `<tr><td colspan="${cs.length}">Nenhum resultado.</td></tr>`;
+  $("#c-conta").textContent = rows.length + " registro(s)";
+}
+function ligaDados(){
+  const cids = [...new Set(D.associados.map(a => a.cidade).filter(Boolean))].sort();
+  const atual = $("#c-cid").value;
+  $("#c-cid").innerHTML = '<option value="">Todas</option>' + cids.map(c => `<option ${c === atual ? "selected" : ""}>${esc(c)}</option>`).join("");
+  desenhaConsulta(); desenhaLista(); edLista(); if (sel) desenhaFicha();
+}
+["c-q","c-inv","c-sit","c-cad","c-cid","c-quem"].forEach(id => $("#" + id).addEventListener("input", desenhaConsulta));
+$("#cols").addEventListener("change", desenhaConsulta);
+
+function resumoFiltros(){
+  const f = []; [["c-inv","Invernada"],["c-sit","Situação"],["c-cad","Cadastro"],["c-cid","Cidade"]].forEach(([id, n]) => { if ($("#" + id).value) f.push(n + ": " + $("#" + id).value); });
+  if ($("#c-q").value) f.push("Busca: " + $("#c-q").value);
+  f.push($("#c-quem").value === "t" ? "Somente titulares" : "Titulares e dependentes");
+  return f.join("  |  ");
+}
+$("#pdf").addEventListener("click", () => {
+  const cs = colsSel(), rows = filtradas(); if (!cs.length) return toast("Marque ao menos uma coluna.");
+  const doc = new window.jspdf.jsPDF({unit:"mm", format:"a4", orientation: cs.length > 5 ? "landscape" : "portrait"});
+  const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 12, cw = (W - 2 * M) / cs.length;
+  let y = 0;
+  const cab = () => {
+    doc.setFillColor(255,224,189); doc.rect(0,0,W,20,"F"); doc.setFillColor(246,168,91); doc.rect(0,20,W,1,"F");
+    doc.setFont("helvetica","bold"); doc.setFontSize(14); doc.setTextColor(74,44,18); doc.text("Consulta de associados", M, 12);
+    doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(138,106,77);
+    doc.text(doc.splitTextToSize(resumoFiltros(), W - 2 * M - 40)[0], M, 17); doc.text(rows.length + " registro(s)", W - M, 12, {align:"right"});
+    y = 27; doc.setFillColor(255,224,189); doc.rect(M, y - 4.5, W - 2 * M, 6.5, "F"); doc.setFont("helvetica","bold"); doc.setFontSize(8.5); doc.setTextColor(74,44,18);
+    cs.forEach((c, i) => doc.text(c[1], M + i * cw + 1, y)); y += 6;
+  };
+  cab();
+  rows.forEach((r, n) => {
+    doc.setFont("helvetica","normal"); doc.setFontSize(8.5);
+    const cel = cs.map(c => doc.splitTextToSize(String(r[c[0]] ?? ""), cw - 2)), h = Math.max(...cel.map(l => l.length)) * 4 + 2;
+    if (y + h > H - 12){ doc.addPage(); cab(); }
+    if (n % 2) { doc.setFillColor(255,247,236); doc.rect(M, y - 3.5, W - 2 * M, h, "F"); }
+    doc.setTextColor(74,44,18); cel.forEach((l, i) => doc.text(l, M + i * cw + 1, y)); y += h;
+  });
+  const np = doc.getNumberOfPages(); for (let i = 1; i <= np; i++){ doc.setPage(i); doc.setFontSize(7.5); doc.setTextColor(138,106,77);
+    doc.text("Gerado em " + new Date().toLocaleString("pt-BR"), M, H - 6); doc.text("Página " + i + " de " + np, W - M, H - 6, {align:"right"}); }
+  doc.save("Consulta associados " + new Date().toISOString().slice(0,10) + ".pdf");
+});
+$("#csv").addEventListener("click", () => {
+  const cs = colsSel(), rows = filtradas(), q = v => '"' + String(v ?? "").replace(/"/g, '""') + '"';
+  const t = [cs.map(c => q(c[1])).join(";"), ...rows.map(r => cs.map(c => q(r[c[0]])).join(";"))].join("\r\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["\ufeff" + t], {type:"text/csv;charset=utf-8"}));
+  a.download = "associados.csv"; a.click(); URL.revokeObjectURL(a.href);
+});
+
+/* ---------- Edição (somente Master) ---------- */
+const mCPF = v => v.replace(/\D/g,"").slice(0,11).replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d{1,2})$/,"$1-$2");
+const mCEP = v => v.replace(/\D/g,"").slice(0,8).replace(/(\d{5})(\d)/,"$1-$2");
+const mTel = v => v.replace(/\D/g,"").slice(0,11).replace(/(\d{2})(\d)/,"($1) $2").replace(/(\d{5})(\d{1,4})$/,"$1-$2");
+function cpfValido(c){ c = c.replace(/\D/g,""); if (c.length !== 11 || /^(\d)\1+$/.test(c)) return false;
+  for (let t = 9; t < 11; t++){ let s = 0; for (let i = 0; i < t; i++) s += c[i] * (t + 1 - i); if (((s * 10) % 11) % 10 != c[t]) return false; } return true; }
+const idade = d => { const n = new Date(d), h = new Date(); let a = h.getFullYear() - n.getFullYear(); if (h < new Date(h.getFullYear(), n.getMonth(), n.getDate())) a--; return a; };
+const dataISO = br => { const m = /(\d{2})\/(\d{2})\/(\d{4})/.exec(br || ""); return m ? m[3] + "-" + m[2] + "-" + m[1] : ""; };
+const INV_T = ["Não","Adulta","Veterana","Xirú"], INV_F = ["Não","Mirim","Juvenil"];
+const opts = (lista, atual) => '<option value="">Selecione</option>' + lista.map(o => `<option ${o === atual ? "selected" : ""}>${o}</option>`).join("");
+let EDC = null, fotosNovas = {}, compNovos = {};
+
+function edLista(){
+  const n = norm($("#ed-nome").value), dt = $("#ed-doc").value.trim(), dig = dt.replace(/\D/g,""), cad = $("#ed-cad").value;
+  const r = D.associados.filter(a => (cad === "Todos" || (cad === "Ativos") === (a.situacao !== "Inativo")) &&
+    (!n || norm(a.nome + " " + a.codigo).includes(n)) &&
+    (!dt || (dig ? a.documento.replace(/\D/g,"").includes(dig) : norm(a.documento).includes(norm(dt))))
+  ).sort((x, y) => x.nome.localeCompare(y.nome, "pt-BR"));
+  $("#ed-tb").innerHTML = r.slice(0, 40).map(a => `<tr data-c="${esc(a.codigo)}"><td><b>${esc(a.nome)}</b></td><td>${esc(a.codigo)}</td><td>${esc(a.documento)}</td><td>${esc(a.invernada)}</td><td>${esc(a.situacao)}</td></tr>`).join("")
+    || '<tr><td colspan="5">Nenhum associado encontrado.</td></tr>';
+  $("#ed-conta").textContent = r.length > 40 ? `Mostrando 40 de ${r.length}. Refine a busca.` : `${r.length} associado(s). Clique numa linha para editar.`;
+}
+["ed-nome","ed-doc","ed-cad"].forEach(id => $("#" + id).addEventListener("input", edLista));
+$("#ed-tb").addEventListener("click", e => { const tr = e.target.closest("tr[data-c]"); if (tr) abreEd(tr.dataset.c); });
+
+function lerImagem(file, max = 600){
+  return new Promise((ok, no) => { const fr = new FileReader();
+    fr.onload = () => { const img = new Image(); img.onload = () => { const k = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement("canvas"); c.width = img.width * k; c.height = img.height * k;
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); ok(c.toDataURL("image/jpeg", .8)); }; img.onerror = no; img.src = fr.result; };
+    fr.onerror = no; fr.readAsDataURL(file); });
+}
+const docHtml = (cls, doc) => { const p = (doc || "").split(" "), rg = p[0] === "RG", num = p.slice(1).join(" ");
+  return `<div class="dd"><select class="${cls}-t"><option>CPF</option><option ${rg ? "selected" : ""}>RG</option></select><input class="${cls}-n" value="${esc(num)}"></div>`; };
+const fotoHtml = id => `<div class="fotoed"><div class="pv" id="pv-${id}">Sem foto</div><input type="file" accept="image/*" data-foto="${id}"></div>`;
+const campo = (rot, html) => `<div><label>${rot}</label>${html}</div>`;
+const inp = (id, v, extra = "") => `<input id="${id}" value="${esc(v)}" ${extra}>`;
+
+async function abreEd(cod){
+  const a = D.associados.find(x => x.codigo === cod); if (!a) return;
+  $("#espera").hidden = false;
+  let det;
+  try { det = await api("detalhe", {codigo: cod}); } catch (err){ toast("Erro: " + err.message, 7000); return; } finally { $("#espera").hidden = true; }
+  EDC = a; fotosNovas = {}; compNovos = {};
+  const f = $("#ed-form");
+  f.innerHTML = `<div class="card" style="margin-top:0"><button class="s" id="ed-voltar">← Voltar à lista</button>
+    <h2 style="margin-top:12px">Titular · ${esc(a.codigo)}</h2><div class="g">
+    ${campo("Nome", inp("e-nome", a.nome))}
+    ${campo("Nascimento", inp("e-nasc", dataISO(a.nascimento), 'type="date"'))}
+    ${campo("Documento", docHtml("e-doc", a.documento))}
+    ${campo("WhatsApp", inp("e-whats", a.whatsapp, 'inputmode="numeric"'))}
+    ${campo("E-mail", inp("e-email", a.email, 'type="email"'))}
+    ${campo("Rua", inp("e-rua", a.rua))}${campo("Nº", inp("e-nr", a.numero))}${campo("Bairro", inp("e-bairro", a.bairro))}
+    ${campo("Cidade", inp("e-cidade", a.cidade))}${campo("CEP", inp("e-cep", a.cep, 'inputmode="numeric"'))}
+    ${campo("Invernada", `<select id="e-inv">${opts(INV_T, a.invernada)}</select>`)}
+    ${campo("Foto 3x4 (escolha para trocar)", fotoHtml("t"))}</div></div>` +
+    a.deps.map((d, k) => { const conj = d.parentesco === "Cônjuge", slot = d.slot, dd = det.deps.find(x => x.slot === slot) || {};
+      return `<div class="card edep" data-slot="${slot}"><h2>Dependente ${k + 1} · ${esc(d.parentesco)} · ${esc(d.codigo)}</h2><div class="g">
+      ${campo("Nome", `<input class="d-nome" value="${esc(d.nome)}">`)}
+      ${campo("Nascimento", `<input class="d-nasc" type="date" value="${dataISO(d.nascimento)}">`)}
+      ${campo("Documento", docHtml("d-doc", d.documento))}
+      ${campo("Invernada", `<select class="d-inv">${opts(conj ? INV_T : INV_F, d.invernada)}</select>`)}
+      ${campo("Foto 3x4 (escolha para trocar)", fotoHtml("d" + slot))}
+      ${conj ? campo("Comprovante (união estável ou certidão)" + (dd.temComprovante ? " — já existe um anexado" : ""), `<input type="file" class="d-comp" accept="image/*,application/pdf">`) : ""}</div></div>`; }).join("") +
+    `<div class="linha" style="margin-top:14px"><button class="p" id="ed-salvar">Salvar alterações</button><button class="s" id="ed-cancelar">Cancelar</button></div>`;
+  const pv = (id, src) => { if (src){ const e = $("#pv-" + id); e.style.backgroundImage = `url(${src})`; e.textContent = ""; } };
+  pv("t", det.foto); det.deps.forEach(x => pv("d" + x.slot, x.foto));
+  mascaraDoc(f.querySelector(".e-doc-t"), f.querySelector(".e-doc-n"));
+  f.querySelectorAll(".edep").forEach(b => mascaraDoc(b.querySelector(".d-doc-t"), b.querySelector(".d-doc-n")));
+  $("#e-cep").addEventListener("input", e => e.target.value = mCEP(e.target.value));
+  $("#e-whats").addEventListener("input", e => e.target.value = mTel(e.target.value));
+  f.querySelectorAll("[data-foto]").forEach(i => i.addEventListener("change", async () => {
+    if (!i.files[0]) return; const src = await lerImagem(i.files[0]); fotosNovas[i.dataset.foto] = src; pv(i.dataset.foto, src); }));
+  $("#ed-voltar").onclick = $("#ed-cancelar").onclick = fechaEd; $("#ed-salvar").onclick = salvaEd;
+  $("#ed-lista").hidden = true; f.hidden = false; window.scrollTo({top: 0});
+}
+function mascaraDoc(sel, num){
+  const ap = () => { const c = sel.value === "CPF"; num.maxLength = c ? 14 : 20; num.value = c ? mCPF(num.value) : num.value.toUpperCase(); };
+  sel.addEventListener("change", ap); num.addEventListener("input", () => num.value = sel.value === "CPF" ? mCPF(num.value) : num.value.toUpperCase().replace(/[^0-9A-Z.\-\/ ]/g, "")); ap();
+}
+function fechaEd(){ EDC = null; $("#ed-form").hidden = true; $("#ed-lista").hidden = false; edLista(); }
+async function salvaEd(){
+  const f = $("#ed-form"), v = id => $("#" + id).value.trim(), erro = t => { toast(t, 6000); return false; };
+  const doc = (sel, num) => sel.value + " " + num.value.trim();
+  if (!v("e-nome")) return erro("Informe o nome do titular.");
+  if (!v("e-nasc")) return erro("Informe o nascimento do titular.");
+  if (idade(v("e-nasc")) < 18) return erro("O titular deve ser maior de 18 anos.");
+  const dt = f.querySelector(".e-doc-t"), dn = f.querySelector(".e-doc-n");
+  if (!dn.value.trim()) return erro("Informe o documento do titular.");
+  if (dt.value === "CPF" && !cpfValido(dn.value)) return erro("CPF do titular inválido.");
+  if (v("e-email") && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v("e-email"))) return erro("E-mail inválido.");
+  const deps = [], fotosDeps = {}, comprovantes = {};
+  for (const b of f.querySelectorAll(".edep")){
+    const slot = b.dataset.slot, nm = b.querySelector(".d-nome").value.trim(), n = b.querySelector(".d-doc-n"), t = b.querySelector(".d-doc-t");
+    if (!nm || !b.querySelector(".d-nasc").value || !n.value.trim()) return erro("Preencha nome, nascimento e documento de todos os dependentes.");
+    if (t.value === "CPF" && !cpfValido(n.value)) return erro("CPF inválido em " + nm + ".");
+    deps.push({slot, nome: nm, nascimento: b.querySelector(".d-nasc").value, documento: doc(t, n), invernada: b.querySelector(".d-inv").value});
+    if (fotosNovas["d" + slot]) fotosDeps[slot] = fotosNovas["d" + slot];
+    const cf = b.querySelector(".d-comp") && b.querySelector(".d-comp").files[0];
+    if (cf){ if (cf.size > 8e6) return erro("Comprovante acima de 8 MB."); 
+      comprovantes[slot] = await new Promise(ok => { const fr = new FileReader(); fr.onload = () => ok({nome: cf.name, tipo: cf.type, dados: fr.result}); fr.readAsDataURL(cf); }); }
+  }
+  const r = await acao("editar", {codigo: EDC.codigo, titular: {nome: v("e-nome"), nascimento: v("e-nasc"), documento: doc(dt, dn), rua: v("e-rua"), numero: v("e-nr"),
+    bairro: v("e-bairro"), cidade: v("e-cidade"), cep: v("e-cep"), email: v("e-email"), whatsapp: v("e-whats"), invernada: $("#e-inv").value},
+    deps, fotoTitular: fotosNovas.t || null, fotosDeps, comprovantes}, "Cadastro atualizado.");
+  if (r){ fechaEd(); window.scrollTo({top: 0, behavior: "smooth"}); }
+}
+
+/* ---------- acesso e abas ---------- */
+document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("nav button").forEach(x => x.classList.toggle("on", x === b));
+  ["fin","con","edi"].forEach(k => $("#aba-" + k).hidden = b.dataset.aba !== k); }));
+function aplicaPerfil(){   // Master: as duas abas | Financeiro: só Financeiro | Consulta: só Consulta
+  const p = sessionStorage.getItem("perfil"), fin = p !== "consulta", con = p !== "financeiro";
+  $('nav [data-aba="fin"]').hidden = !fin; $('nav [data-aba="con"]').hidden = !con;
+  $('nav [data-aba="edi"]').hidden = p !== "master";
+  $(`nav [data-aba="${fin ? "fin" : "con"}"]`).click();
+  $("#quem").textContent += " (" + p.charAt(0).toUpperCase() + p.slice(1) + ")";
+}
+async function entrar(){
+  $("#e-login").textContent = ""; $("#entrar").disabled = true; $("#entrar").textContent = "Entrando…";
+  try {
+    if (!URL_API) throw new Error("Configure URL_API no início do script.");
+    const r = await fetch(URL_API, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify({acao:"login", usuario: $("#usuario").value, senha: $("#senha").value})});
+    const j = await r.json(); if (!j.ok) throw new Error(j.erro || "Falha no login");
+    sessionStorage.setItem("token", j.token); sessionStorage.setItem("perfil", j.perfil);
+    $("#quem").textContent = "Olá, " + j.nome;
+    await carregar(); $("#senha").value = ""; $("#login").hidden = true; $("#app").hidden = false; aplicaPerfil();
+  } catch (err){ sessionStorage.clear(); $("#e-login").textContent = err.message; }
+  $("#entrar").disabled = false; $("#entrar").textContent = "Entrar";
+}
+$("#entrar").addEventListener("click", entrar);
+["#usuario","#senha"].forEach(i => $(i).addEventListener("keydown", e => { if (e.key === "Enter") entrar(); }));
+$("#sair").addEventListener("click", () => { sessionStorage.clear(); location.reload(); });
+$("#atualizar").addEventListener("click", async () => { try { await carregar(); toast("Dados atualizados."); } catch (e){ toast(e.message); } });
+</script>
+</body>
+</html>
